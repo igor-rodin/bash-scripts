@@ -7,8 +7,15 @@ if [ $# -ne 1 ]; then
     exit 1
 fi
 
-for file in $(ls $1 | grep -E "\.(bak|tmp|backup)$"); do
-    path_to_file=$1/$file
+abs_path=$(realpath $1)
+
+if ! [ -d $abs_path ]; then
+    echo "No such directory -> $abs_path"
+    exit 1
+fi
+
+for file in $(ls $abs_path | grep -E "\.(bak|tmp|backup)$"); do
+    path_to_file=$abs_path/$file
     if [ -f $path_to_file ]; then
         echo "removing -> $path_to_file"
         rm $path_to_file
